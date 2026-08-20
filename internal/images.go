@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"fmt"
+	"io"
+	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 )
 
@@ -36,12 +38,32 @@ func downloadImage(uma *Uma) error {
 		return nil
 	}
 
-	cmd := exec.Command("curl", "-s", "-L", "-o", path, url)
-	if err := cmd.Run(); err != nil {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("image not found: %s (status %d)", url, resp.StatusCode)
+	}
+
+	ct := resp.Header.Get("Content-Type")
+	if ct != "image/png" {
+		return fmt.Errorf("unexpected content type %q for %s", ct, url)
+	}
+
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err := io.Copy(f, resp.Body); err != nil {
+		os.Remove(path)
 		return err
 	}
 
 	uma.Image = path
-
 	return nil
 }

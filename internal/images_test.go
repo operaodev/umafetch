@@ -78,8 +78,8 @@ func TestDownloadImageCached(t *testing.T) {
 		t.Fatalf("imageDir() error: %v", err)
 	}
 
-	url := uma.ImageUrl()
-	cachePath := filepath.Join(dir, filepath.Base(url))
+	cacheURL := uma.ImageUrl()
+	cachePath := filepath.Join(dir, filepath.Base(cacheURL))
 
 	os.WriteFile(cachePath, []byte("cached"), 0644)
 
@@ -95,4 +95,22 @@ func TestDownloadImageCached(t *testing.T) {
 	if string(content) != "cached" {
 		t.Error("file was re-downloaded instead of using cache")
 	}
+}
+
+func TestDownloadImageInvalid(t *testing.T) {
+	uma := Uma{
+		ID:    9999,
+		Title: "Nonexistent",
+	}
+
+	err := downloadImage(&uma)
+	if err == nil {
+		t.Fatal("expected error for invalid image, got nil")
+	}
+
+	if uma.Image != "" {
+		t.Errorf("uma.Image should be empty on error, got %q", uma.Image)
+	}
+
+	t.Logf("Correctly caught error: %v", err)
 }
