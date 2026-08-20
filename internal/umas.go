@@ -16,9 +16,8 @@ type Uma struct {
 }
 
 func (u *Uma) ImageUrl() string {
-	return fmt.Sprintf("https://media.gametora.com/umamusume/characters/profile/%d.png", u.ID)
-}
-
-func (u *Uma) ImageOutfitUrl() string {
-	return fmt.Sprintf("https://gametora.com/images/umamusume/characters/chara_stand_%d_%d.png", u.ID, u.OutfitID)
+	if u.OutfitID == nil {
+		return fmt.Sprintf("https://media.gametora.com/umamusume/characters/profile/%d.png", u.ID)
+	}
+	return fmt.Sprintf("https://gametora.com/images/umamusume/characters/chara_stand_%d_%d.png", u.ID, *u.OutfitID)
 }
