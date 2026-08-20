@@ -9,7 +9,7 @@ import (
 const AppDir = "umafetch"
 
 func imageDir() (string, error) {
-	localDir, err := os.UserCacheDir()
+	localDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
@@ -29,9 +29,10 @@ func downloadImage(uma *Uma) error {
 	}
 
 	url := uma.ImageUrl()
-	path := filepath.Join(dir, url)
+	path := filepath.Join(dir, filepath.Base(url))
 
 	if _, err := os.Stat(path); err == nil {
+		uma.Image = path
 		return nil
 	}
 
