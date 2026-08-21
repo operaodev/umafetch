@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"image"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"testing"
@@ -113,4 +115,66 @@ func TestDownloadImageInvalid(t *testing.T) {
 	}
 
 	t.Logf("Correctly caught error: %v", err)
+}
+
+func TestExtractColors(t *testing.T) {
+	uma := Uma{
+		ID:    1001,
+		Title: "Special Week",
+	}
+
+	if err := downloadImage(&uma); err != nil {
+		t.Fatalf("downloadImage() error: %v", err)
+	}
+
+	if err := extractColors(&uma); err != nil {
+		t.Fatalf("extractColors() error: %v", err)
+	}
+
+	if uma.MainColor == "" {
+		t.Error("MainColor is empty")
+	}
+	if uma.SubColor == "" {
+		t.Error("SubColor is empty")
+	}
+	if len(uma.MainColor) != 7 || uma.MainColor[0] != '#' {
+		t.Errorf("MainColor is not a valid hex color: %q", uma.MainColor)
+	}
+	if len(uma.SubColor) != 7 || uma.SubColor[0] != '#' {
+		t.Errorf("SubColor is not a valid hex color: %q", uma.SubColor)
+	}
+
+	t.Logf("Colors: main=%s sub=%s", uma.MainColor, uma.SubColor)
+}
+
+func TestGetColors(t *testing.T) {
+	uma := Uma{
+		ID:    1001,
+		Title: "Special Week",
+	}
+
+	if err := downloadImage(&uma); err != nil {
+		t.Fatalf("downloadImage() error: %v", err)
+	}
+
+	file, err := os.Open(uma.Image)
+	if err != nil {
+		t.Fatalf("open image error: %v", err)
+	}
+	defer file.Close()
+
+	img, _, err := image.Decode(file)
+	if err != nil {
+		t.Fatalf("decode image error: %v", err)
+	}
+
+	colors := getColors(img)
+	if len(colors) == 0 {
+		t.Fatal("getColors returned no colors")
+	}
+
+	t.Logf("All distinct colors (%d):", len(colors))
+	for i, c := range colors {
+		t.Logf("  [%d] %s", i, c)
+	}
 }
