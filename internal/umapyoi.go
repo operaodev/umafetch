@@ -10,13 +10,13 @@ import (
 	"time"
 )
 
-var baseURL = "https://umapyoi.net/api/v1"
+const baseURL = "https://umapyoi.net/api/v1"
 
 func randomDelay(min, max time.Duration) {
 	time.Sleep(min + time.Duration(rand.Int63n(int64(max-min))))
 }
 
-func GetUmas() ([]Uma, error) {
+func getUmas() ([]Uma, error) {
 	randomDelay(100*time.Millisecond, 500*time.Millisecond)
 	resp, err := http.Get(baseURL + "/outfit")
 	if err != nil {
