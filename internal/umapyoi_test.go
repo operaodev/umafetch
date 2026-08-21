@@ -5,7 +5,7 @@ import (
 )
 
 func TestGetUmas(t *testing.T) {
-	umas, err := GetUmas()
+	umas, err := getUmas()
 	if err != nil {
 		t.Fatalf("GetUmas returned error: %v", err)
 	}
