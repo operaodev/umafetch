@@ -27,6 +27,7 @@ func imageDir() (string, error) {
 	return dir, nil
 }
 
+// downloadImage descarga la imagen de una UMA y la guarda en el directorio de imágenes.
 func downloadImage(uma *Uma) error {
 	dir, err := imageDir()
 	if err != nil {
@@ -71,6 +72,7 @@ func downloadImage(uma *Uma) error {
 	return nil
 }
 
+// extractColors extrae los colores principales y secundarios de una imagen de una UMA.
 func extractColors(uma *Uma) error {
 	if uma.OutfitID == nil {
 		uma.MainColor = "#7E69CC"

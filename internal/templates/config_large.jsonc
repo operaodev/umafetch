@@ -1,0 +1,107 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        // DO NOT EDIT: auto-generated image
+        "source": "{Image}",
+        "height": 27,
+        "padding": {
+            "left": 1
+        }
+    },
+    "display": {
+        "separator": " : ",
+        "color": {
+            // DO NOT EDIT: auto-generated color
+            "keys": "{SecondaryColor}",
+            "title": "{SecondaryColor}"
+        },
+        "key": {
+            "width": 0
+        }
+    },
+    "modules": [
+        // DO NOT EDIT: auto-generated separator line
+        {separator},
+        {
+            "type": "custom",
+            // DO NOT EDIT: auto-generated name
+            "format": "\u001b[1m {Name}\u001b[0m",
+            // DO NOT EDIT: auto-generated color
+            "outputColor": "{PrimaryColor}"
+        },
+        {
+            "type": "custom",
+            // DO NOT EDIT: auto-generated title
+            "format": "\u001b[1m󰩻 {Title}\u001b[0m",
+            "outputColor": "{SecondaryColor}"
+        },
+        "break",
+        // DO NOT EDIT: auto-generated slogan
+        {SloganLines},
+        // DO NOT EDIT: auto-generated bio
+        {BioLines},
+        {separator},
+        "title",
+        "break",
+        {
+            "type": "os",
+            "key": " OS      "
+        },
+        {
+            "type": "host",
+            "key": " Host    "
+        },
+        {
+            "type": "kernel",
+            "key": " Kernel  "
+        },
+        {
+            "type": "uptime",
+            "key": " Uptime  "
+        },
+        "break",
+        {
+            "type": "packages",
+            "key": " Packages"
+        },
+        {
+            "type": "shell",
+            "key": " Shell   "
+        },
+        {
+            "type": "display",
+            "key": " Display "
+        },
+        {
+            "type": "wm",
+            "key": " WM      "
+        },
+        {
+            "type": "terminal",
+            "key": " Terminal"
+        },
+        "break",
+        {
+            "type": "cpu",
+            "key": " CPU     ",
+            "format": "{1}"
+        },
+        {
+            "type": "gpu",
+            "key": " GPU     "
+        },
+        {
+            "type": "memory",
+            "key": " Memory  "
+        },
+        {
+            "type": "disk",
+            "key": " Disk    "
+        },
+        "break",
+        {
+            "type": "colors",
+            "symbol": "circle"
+        }
+    ]
+}
