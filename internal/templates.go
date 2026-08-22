@@ -30,12 +30,7 @@ func GenerateDefaultTemplateLarge() error {
 }
 
 // FindTemplate encuentra el template según la configuración.
-func FindTemplate() (string, error) {
-	config, err := ConfigLoad()
-	if err != nil {
-		return "", err
-	}
-
+func FindTemplate(config Config) (string, error) {
 	var name string
 	if config.Template == TemplateLarge {
 		name = "config_large.jsonc"
