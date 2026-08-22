@@ -78,6 +78,10 @@ func (c Config) ConfigSave() error {
 		return err
 	}
 
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
+
 	data, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return err
