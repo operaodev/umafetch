@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"sync"
@@ -35,6 +36,40 @@ func umasPath() (string, error) {
 		return "", err
 	}
 	return filepath.Join(localDir, AppDir, "umas.json"), nil
+}
+
+// FindUma encuentra una UMA aleatoria o específica según la configuración.
+func FindUma() (*Uma, error) {
+	config, err := ConfigLoad()
+	if err != nil {
+		return nil, err
+	}
+
+	name := config.Theme.Name
+	outfit := config.Theme.Outfit
+
+	umas, err := FindUmas()
+	if err != nil {
+		return nil, err
+	}
+	if len(umas) == 0 {
+		return nil, fmt.Errorf("no umas found")
+	}
+
+	result := make([]Uma, 0, len(umas))
+	for _, uma := range umas {
+		matchName := name == nil || uma.Name == *name
+		matchOutfit := outfit == nil || uma.Order == *outfit
+		if matchName && matchOutfit {
+			result = append(result, uma)
+		}
+	}
+
+	if len(result) == 0 {
+		return nil, fmt.Errorf("no uma found with name=%v outfit=%v", name, outfit)
+	}
+
+	return &result[rand.Intn(len(result))], nil
 }
 
 // FindUmas encuentra las umas desde el archivo de umas.
