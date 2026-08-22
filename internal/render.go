@@ -10,26 +10,12 @@ import (
 )
 
 const (
-	defaultSlogan = "Umamusume! Pretty Derby - Where dreams are won on the track!"
+	defaultSlogan  = "Umamusume! Pretty Derby - Where dreams are won on the track!"
 	defaultProfile = "A horse girl who runs with all her heart. Born from the legend of the racetrack, she strives to become the ultimate champion."
 )
 
-func RenderUma() (string, error) {
-	uma, err := FindUma()
-	if err != nil {
-		return "", err
-	}
-
-	template, err := FindTemplate()
-	if err != nil {
-		return "", err
-	}
-
-	cfg, err := ConfigLoad()
-	if err != nil {
-		return "", err
-	}
-
+// RenderUma renderiza una UMA usando el template y la configuración proporcionados
+func (uma Uma) RenderUma(template string, cfg Config) (string, error) {
 	slogan := uma.Slogan
 	if slogan == "" {
 		slogan = defaultSlogan

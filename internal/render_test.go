@@ -68,7 +68,22 @@ func TestRenderUma(t *testing.T) {
 		}
 	}
 
-	path, err := RenderUma()
+	cfg, err := ConfigLoad()
+	if err != nil {
+		t.Fatalf("ConfigLoad() error: %v", err)
+	}
+
+	uma, err := FindUma(cfg)
+	if err != nil {
+		t.Fatalf("FindUma() error: %v", err)
+	}
+
+	template, err := FindTemplate(cfg)
+	if err != nil {
+		t.Fatalf("FindTemplate() error: %v", err)
+	}
+
+	path, err := uma.RenderUma(template, cfg)
 	if err != nil {
 		t.Fatalf("RenderUma() error: %v", err)
 	}

@@ -39,12 +39,7 @@ func umasPath() (string, error) {
 }
 
 // FindUma encuentra una UMA aleatoria o específica según la configuración.
-func FindUma() (*Uma, error) {
-	config, err := ConfigLoad()
-	if err != nil {
-		return nil, err
-	}
-
+func FindUma(config Config) (*Uma, error) {
 	name := config.Theme.Name
 	outfit := config.Theme.Outfit
 

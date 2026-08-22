@@ -51,7 +51,7 @@ func TestFindUmaRandom(t *testing.T) {
 	}
 	cfg.ConfigSave()
 
-	uma, err := FindUma()
+	uma, err := FindUma(cfg)
 	if err != nil {
 		t.Fatalf("FindUma() random error: %v", err)
 	}
@@ -85,7 +85,7 @@ func TestFindUmaSpecialWeekOutfit0(t *testing.T) {
 	}
 	cfg.ConfigSave()
 
-	uma, err := FindUma()
+	uma, err := FindUma(cfg)
 	if err != nil {
 		t.Fatalf("FindUma() Special Week outfit 0 error: %v", err)
 	}
@@ -117,7 +117,7 @@ func TestFindUmaSpecialWeekAnyOutfit(t *testing.T) {
 	}
 	cfg.ConfigSave()
 
-	uma, err := FindUma()
+	uma, err := FindUma(cfg)
 	if err != nil {
 		t.Fatalf("FindUma() Special Week any outfit error: %v", err)
 	}

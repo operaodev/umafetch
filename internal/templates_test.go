@@ -41,7 +41,10 @@ func TestGenerateDefaultTemplateSmall(t *testing.T) {
 }
 
 func TestFindTemplate(t *testing.T) {
-	content, err := FindTemplate()
+	config := Config{
+		Template: TemplateLarge,
+	}
+	content, err := FindTemplate(config)
 	if err != nil {
 		t.Fatalf("FindTemplate() error: %v", err)
 	}
