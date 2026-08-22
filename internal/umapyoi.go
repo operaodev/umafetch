@@ -16,6 +16,7 @@ func randomDelay(min, max time.Duration) {
 	time.Sleep(min + time.Duration(rand.Int63n(int64(max-min))))
 }
 
+// getUmas obtiene las umas desde la API de umapyoi.
 func getUmas() ([]Uma, error) {
 	randomDelay(100*time.Millisecond, 500*time.Millisecond)
 	resp, err := http.Get(baseURL + "/outfit")
@@ -92,6 +93,7 @@ func getUmas() ([]Uma, error) {
 	return result, nil
 }
 
+// getCharacter obtiene un personaje específico por su ID.
 func getCharacter(id int) (*Uma, error) {
 	resp, err := http.Get(fmt.Sprintf("%s/character/%d", baseURL, id))
 	if err != nil {

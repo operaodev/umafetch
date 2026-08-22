@@ -29,7 +29,7 @@ func (u *Uma) ImageUrl() string {
 	return fmt.Sprintf("https://gametora.com/images/umamusume/characters/chara_stand_%d_%d.png", u.ID, *u.OutfitID)
 }
 
-func umasDir() (string, error) {
+func umasPath() (string, error) {
 	localDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
@@ -37,8 +37,9 @@ func umasDir() (string, error) {
 	return filepath.Join(localDir, AppDir, "umas.json"), nil
 }
 
+// FindUmas encuentra las umas desde el archivo de umas.
 func FindUmas() ([]Uma, error) {
-	path, err := umasDir()
+	path, err := umasPath()
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +57,9 @@ func FindUmas() ([]Uma, error) {
 	return umas, nil
 }
 
+// UmasExist verifica si el archivo de umas existe.
 func UmasExist() bool {
-	path, err := umasDir()
+	path, err := umasPath()
 	if err != nil {
 		return false
 	}
@@ -66,6 +68,7 @@ func UmasExist() bool {
 	return err == nil && info.Size() > 0
 }
 
+// SaveUmas guarda las umas en el archivo de umas.
 func SaveUmas() error {
 	umas, err := getUmas()
 	if err != nil {
@@ -98,7 +101,7 @@ func SaveUmas() error {
 	}
 	wg.Wait()
 
-	path, err := umasDir()
+	path, err := umasPath()
 	if err != nil {
 		return err
 	}
