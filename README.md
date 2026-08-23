@@ -49,6 +49,55 @@ You can also customize the selection when rendering by using flags before runnin
 umafetch render --name "Special Week" --template small && fastfetch
 ```
 
+## Configuration
+
+Umafetch configurations and layout templates are stored in your home directory:
+- Main configuration file: `~/.config/umafetch/config.json`
+- Templates directory: `~/.config/umafetch/templates/`
+
+### Global Configuration (`config.json`)
+
+Here is the default structure of the `config.json` file:
+
+```json
+{
+  "template": "large",
+  "separator": {
+    "width": 52,
+    "decorator": "─"
+  },
+  "theme": {
+    "name": null,
+    "outfit": null
+  }
+}
+```
+
+#### Fields Description:
+
+- `template`: Defines the default fastfetch layout template to use (`large` or `small`).
+- `separator`: Customizes the visual divider line generated between section modules.
+  - `width`: The width (in characters) of the divider line.
+  - `decorator`: The character or ANSI symbol used to construct the line (defaults to `"─"`).
+- `theme`: Configures character selection behavior.
+  - `name`: The name of a specific Uma Musume to display (e.g. `"Special Week"`). Set to `null` to select a random character on every run.
+  - `outfit`: The index of the specific outfit/costume to load (e.g. `0` for Tracen Academy uniform, `1` for first special outfit). Set to `null` to select a random outfit.
+
+### Editing Templates
+
+The fastfetch configuration templates (`config_large.jsonc` and `config_small.jsonc`) are fully editable. You can modify the modules, borders, or any other fastfetch settings as you like.
+
+However, you must keep the following placeholders intact, as they are programmatically replaced by umafetch during rendering:
+
+- `{Image}`: Path to the character's image.
+- `{PrimaryColor}`: Hex code for the primary color.
+- `{SecondaryColor}`: Hex code for the secondary color.
+- `{Name}`: The character's name.
+- `{Title}`: The outfit title.
+- `{SloganLines}`: Character's slogan formatted for the layout.
+- `{BioLines}`: Character's profile bio formatted for the layout.
+- `{separator}`: Customized separator module based on the character's primary color.
+
 ## Available Commands
 
 The umafetch CLI provides the following commands:
