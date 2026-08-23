@@ -32,29 +32,29 @@
         "break",
         {
             "type": "os",
-            "key": " os    "
+            "key": " os    "
         },
         {
             "type": "kernel",
-            "key": " kernel"
+            "key": " kernel"
         },
         {
             "type": "host",
             "format": "{5} {1}",
-            "key": " host  "
+            "key": " host  "
         },
         {
             "type": "packages",
-            "key": " pkgs  "
+            "key": " pkgs  "
         },
         {
             "type": "uptime",
             "format": "{2}h {3}m",
-            "key": " uptime"
+            "key": " uptime"
         },
         {
             "type": "memory",
-            "key": " memory"
+            "key": " memory"
         },
         "break",
         {
