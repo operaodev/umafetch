@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/operaodev/umafetch/internal"
@@ -62,9 +64,25 @@ var renderCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("error rendering: %w", err)
 		}
+		defer os.RemoveAll(filepath.Dir(configPath))
 
-		// Print only the path to stdout so it can be captured by the shell
-		fmt.Println(configPath)
+		configDir, err := os.UserConfigDir()
+		if err != nil {
+			return fmt.Errorf("error getting user config directory: %w", err)
+		}
+		fastfetchConfigDir := filepath.Join(configDir, "fastfetch")
+		if err := os.MkdirAll(fastfetchConfigDir, 0755); err != nil {
+			return fmt.Errorf("error creating fastfetch config directory: %w", err)
+		}
+		fastfetchConfigPath := filepath.Join(fastfetchConfigDir, "config.jsonc")
+
+		data, err := os.ReadFile(configPath)
+		if err != nil {
+			return fmt.Errorf("error reading rendered config: %w", err)
+		}
+		if err := os.WriteFile(fastfetchConfigPath, data, 0644); err != nil {
+			return fmt.Errorf("error writing fastfetch config: %w", err)
+		}
 		return nil
 	},
 }
