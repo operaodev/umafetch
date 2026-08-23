@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 func resetFlags() {
@@ -14,6 +15,16 @@ func resetFlags() {
 	flagFull = false
 	flagGenTemplate = ""
 	flagSwitch = false
+	resetFlagSets(umasCmd, templateCmd, renderCmd)
+}
+
+func resetFlagSets(cmds ...*cobra.Command) {
+	for _, c := range cmds {
+		c.Flags().Visit(func(f *pflag.Flag) {
+			f.Changed = false
+			f.Value.Set(f.DefValue)
+		})
+	}
 }
 
 func newCmd() *cobra.Command {
@@ -26,7 +37,7 @@ func newCmd() *cobra.Command {
 		SilenceErrors: true,
 	}
 	cmd.SetVersionTemplate(`v{{.Version}}`)
-	cmd.AddCommand(umasCmd, templateCmd, installCmd)
+	cmd.AddCommand(umasCmd, templateCmd, installCmd, renderCmd)
 	return cmd
 }
 
@@ -212,5 +223,47 @@ func TestTemplateGenInvalid(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "unknown template") {
 		t.Errorf("error should contain 'unknown template', got: %v", err)
+	}
+}
+
+func TestRenderHelp(t *testing.T) {
+	cmd := newCmd()
+	out, err := execute(cmd, "render", "--help")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(out, "render") {
+		t.Errorf("help should contain 'render', got: %s", out)
+	}
+	if !strings.Contains(out, "--template") {
+		t.Errorf("help should contain '--template' flag, got: %s", out)
+	}
+	if !strings.Contains(out, "--name") {
+		t.Errorf("help should contain '--name' flag, got: %s", out)
+	}
+	if !strings.Contains(out, "--outfit") {
+		t.Errorf("help should contain '--outfit' flag, got: %s", out)
+	}
+}
+
+func TestRenderInvalidTemplate(t *testing.T) {
+	cmd := newCmd()
+	_, err := execute(cmd, "render", "--template", "invalid")
+	if err == nil {
+		t.Fatal("expected error for invalid template")
+	}
+	if !strings.Contains(err.Error(), "unknown template") {
+		t.Errorf("error should contain 'unknown template', got: %v", err)
+	}
+}
+
+func TestRenderInvalidOutfit(t *testing.T) {
+	cmd := newCmd()
+	_, err := execute(cmd, "render", "--outfit", "abc")
+	if err == nil {
+		t.Fatal("expected error for invalid outfit")
+	}
+	if !strings.Contains(err.Error(), "invalid outfit number") {
+		t.Errorf("error should contain 'invalid outfit number', got: %v", err)
 	}
 }
