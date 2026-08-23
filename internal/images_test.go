@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"image"
+	"fmt"
 	_ "image/png"
 	"os"
 	"path/filepath"
@@ -118,63 +118,43 @@ func TestDownloadImageInvalid(t *testing.T) {
 }
 
 func TestExtractColors(t *testing.T) {
-	uma := Uma{
-		ID:    1001,
-		Title: "Special Week",
+	umas := []Uma{
+		{ID: 1006, OutfitID: new(100602), Title: "Oguri Cap"},
+		{ID: 1007, OutfitID: new(100703), Title: "Gold Ship"},
 	}
 
-	if err := downloadImage(&uma); err != nil {
-		t.Fatalf("downloadImage() error: %v", err)
-	}
+	for _, uma := range umas {
+		if err := downloadImage(&uma); err != nil {
+			t.Fatalf("downloadImage(%s) error: %v", uma.Title, err)
+		}
 
-	if err := extractColors(&uma); err != nil {
-		t.Fatalf("extractColors() error: %v", err)
-	}
+		if err := extractColors(&uma); err != nil {
+			t.Fatalf("extractColors(%s) error: %v", uma.Title, err)
+		}
 
-	if uma.MainColor == "" {
-		t.Error("MainColor is empty")
-	}
-	if uma.SubColor == "" {
-		t.Error("SubColor is empty")
-	}
-	if len(uma.MainColor) != 7 || uma.MainColor[0] != '#' {
-		t.Errorf("MainColor is not a valid hex color: %q", uma.MainColor)
-	}
-	if len(uma.SubColor) != 7 || uma.SubColor[0] != '#' {
-		t.Errorf("SubColor is not a valid hex color: %q", uma.SubColor)
-	}
+		if uma.MainColor == "" {
+			t.Errorf("%s: MainColor is empty", uma.Title)
+		}
+		if uma.SubColor == "" {
+			t.Errorf("%s: SubColor is empty", uma.Title)
+		}
+		if len(uma.MainColor) != 7 || uma.MainColor[0] != '#' {
+			t.Errorf("%s: MainColor is not a valid hex color: %q", uma.Title, uma.MainColor)
+		}
+		if len(uma.SubColor) != 7 || uma.SubColor[0] != '#' {
+			t.Errorf("%s: SubColor is not a valid hex color: %q", uma.Title, uma.SubColor)
+		}
 
-	t.Logf("Colors: main=%s sub=%s", uma.MainColor, uma.SubColor)
+		t.Logf("%s: main=%s sub=%s", uma.Title, uma.MainColor, uma.SubColor)
+		paintColor(t, "main", uma.MainColor)
+		paintColor(t, "sub", uma.SubColor)
+	}
 }
 
-func TestGetColors(t *testing.T) {
-	uma := Uma{
-		ID:    1001,
-		Title: "Special Week",
-	}
+func ptr(v int) *int { return &v }
 
-	if err := downloadImage(&uma); err != nil {
-		t.Fatalf("downloadImage() error: %v", err)
-	}
-
-	file, err := os.Open(uma.Image)
-	if err != nil {
-		t.Fatalf("open image error: %v", err)
-	}
-	defer file.Close()
-
-	img, _, err := image.Decode(file)
-	if err != nil {
-		t.Fatalf("decode image error: %v", err)
-	}
-
-	colors := getColors(img)
-	if len(colors) == 0 {
-		t.Fatal("getColors returned no colors")
-	}
-
-	t.Logf("All distinct colors (%d):", len(colors))
-	for i, c := range colors {
-		t.Logf("  [%d] %s", i, c)
-	}
+func paintColor(t *testing.T, label, hex string) {
+	var r, g, b byte
+	fmt.Sscanf(hex, "#%02X%02X%02X", &r, &g, &b)
+	t.Logf("\033[48;2;%d;%d;%dm  %s %s  \033[0m", r, g, b, label, hex)
 }
