@@ -38,7 +38,7 @@ func umasPath() (string, error) {
 	return filepath.Join(localDir, AppDir, "umas.json"), nil
 }
 
-// FindUma encuentra una UMA aleatoria o específica según la configuración.
+// FindUma finds a random or specific UMA based on the configuration.
 func FindUma(config Config) (*Uma, error) {
 	name := config.Theme.Name
 	outfit := config.Theme.Outfit
@@ -67,7 +67,7 @@ func FindUma(config Config) (*Uma, error) {
 	return &result[rand.Intn(len(result))], nil
 }
 
-// FindUmas encuentra las umas desde el archivo de umas.
+// FindUmas loads the umas from the umas file.
 func FindUmas() ([]Uma, error) {
 	path, err := umasPath()
 	if err != nil {
@@ -87,7 +87,7 @@ func FindUmas() ([]Uma, error) {
 	return umas, nil
 }
 
-// UmasExist verifica si el archivo de umas existe.
+// UmasExist checks if the umas file exists.
 func UmasExist() bool {
 	path, err := umasPath()
 	if err != nil {
@@ -98,7 +98,7 @@ func UmasExist() bool {
 	return err == nil && info.Size() > 0
 }
 
-// SaveUmas guarda las umas en el archivo de umas.
+// SaveUmas saves the umas to the umas file.
 func SaveUmas() error {
 	umas, err := getUmas()
 	if err != nil {

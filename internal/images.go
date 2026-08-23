@@ -28,7 +28,7 @@ func imageDir() (string, error) {
 	return dir, nil
 }
 
-// downloadImage descarga la imagen de una UMA y la guarda en el directorio de imágenes.
+// downloadImage downloads the image of a UMA and saves it to the image directory.
 func downloadImage(uma *Uma) error {
 	dir, err := imageDir()
 	if err != nil {
@@ -73,7 +73,7 @@ func downloadImage(uma *Uma) error {
 	return nil
 }
 
-// extractColors extrae los colores principales y secundarios de una imagen de una UMA.
+// extractColors extracts the primary and secondary colors from a UMA image.
 func extractColors(uma *Uma) error {
 	if uma.OutfitID == nil {
 		uma.MainColor = "#7E69CC"
@@ -102,8 +102,8 @@ func extractColors(uma *Uma) error {
 	return nil
 }
 
-// dominantColors obtiene los 4 colores dominantes distintos de la imagen,
-// luego selecciona main (más vivo) y sub (más distante del main).
+// dominantColors gets the 4 distinct dominant colors from the image,
+// then selects main (most vivid) and sub (most distant from main).
 func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 	bounds := img.Bounds()
 	freq := make(map[[3]byte]int)
@@ -114,11 +114,11 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 			if a < 0x8000 {
 				continue
 			}
-			// Cuantización gruesa en bloques de 8 (5 bits por canal)
+			// Coarse quantization in blocks of 8 (5 bits per channel)
 			qr := uint8((r >> 8) & 0xF8)
 			qg := uint8((g >> 8) & 0xF8)
 			qb := uint8((b >> 8) & 0xF8)
-			// Descartar casi-negros
+			// Discard near-blacks
 			bright := int(qr) + int(qg) + int(qb)
 			if bright < 60 {
 				continue
@@ -139,12 +139,12 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 	for c, n := range freq {
 		buckets = append(buckets, bucket{c, n})
 	}
-	// Ordenar por frecuencia descendente
+	// Sort by descending frequency
 	sort.Slice(buckets, func(i, j int) bool {
 		return buckets[i].count > buckets[j].count
 	})
 
-	// Clasificar buckets: oscuros y piel/marrón se depriorizan como "fondo"
+	// Classify buckets: darks and skin/brown are deprioritized as "background"
 	const minDist = 60.0
 
 	isDark := func(c [3]byte) bool {
@@ -155,8 +155,8 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 		return int(c[0])+int(c[1])+int(c[2]) > 700
 	}
 
-	// Tonos piel y marrón: R dominante, verde > azul (excluye rojos puros),
-	// saturación moderada (excluye colores muy vívidos de outfit).
+	// Skin and brown tones: R dominant, green > blue (excludes pure reds),
+	// moderate saturation (excludes very vivid outfit colors).
 	isSkinOrBrown := func(c [3]byte) bool {
 		r, g, b := float64(c[0]), float64(c[1]), float64(c[2])
 		if r < g || r < b || g <= b || r-b < 30 {
@@ -190,9 +190,9 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 		}
 	}
 
-	// Negro extremadamente dominante: supera 3× el total de píxeles coloridos
+	// Extremely dominant black: exceeds 3× the total of colorful pixels
 	extremelyDark := colorTotal > 0 && float64(darkTotal) > 3.0*float64(colorTotal)
-	// Blanco muy dominante: más píxeles blancos que coloridos
+	// Very dominant white: more white pixels than colorful ones
 	whiteDominant := whiteTotal > colorTotal
 
 	clusters := make([][3]byte, 0, 4)
@@ -215,15 +215,15 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 		}
 	}
 
-	// Primera pasada: solo colores representativos (no oscuros, no piel/marrón, no blancos)
+	// First pass: only representative colors (not darks, not skin/brown, not whites)
 	addClusters(colorBuckets)
 
-	// Incluir blancos si son muy dominantes
+	// Include whites if they are very dominant
 	if whiteDominant {
 		addClusters(whiteBuckets)
 	}
 
-	// Incluir fondo (oscuros y piel/marrón) solo si hay poca diversidad o el negro domina
+	// Include background (darks and skin/brown) only if there is little diversity or black dominates
 	if extremelyDark || len(clusters) < 2 {
 		addClusters(bgBuckets)
 	}
@@ -232,7 +232,7 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 		return
 	}
 
-	// Main: mayor vivacidad (saturación × brillo normalizado)
+	// Main: highest vividness (saturation × normalized brightness)
 	mainIdx := 0
 	bestVivid := -1.0
 	for i, c := range clusters {
@@ -246,7 +246,7 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 	}
 	main = clusters[mainIdx]
 
-	// Sub: el más distante del main entre los restantes
+	// Sub: most distant from main among the remaining
 	subIdx := -1
 	bestDist := -1.0
 	for i, c := range clusters {
@@ -261,7 +261,7 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 	}
 
 	if subIdx < 0 {
-		// Solo había un cluster; usar el main ligeramente desaturado como sub
+		// Only one cluster; use main slightly desaturated as sub
 		sub = [3]byte{
 			uint8(math.Min(255, float64(main[0])*0.7)),
 			uint8(math.Min(255, float64(main[1])*0.7)),
@@ -275,7 +275,7 @@ func dominantColors(img image.Image) (main, sub [3]byte, ok bool) {
 	return
 }
 
-// boostBrightness sube el brillo si el color es muy oscuro para visualizarse en la terminal.
+// boostBrightness increases brightness if the color is too dark to display in the terminal.
 func boostBrightness(c [3]byte) [3]byte {
 	const minBright = 100
 	bright := (int(c[0]) + int(c[1]) + int(c[2])) / 3
@@ -296,7 +296,7 @@ func boostBrightness(c [3]byte) [3]byte {
 	}
 }
 
-// boostSaturation aumenta la saturación del color en espacio HSL preservando tono y luminosidad.
+// boostSaturation increases the color saturation in HSL space while preserving hue and lightness.
 func boostSaturation(c [3]byte) [3]byte {
 	r, g, b := float64(c[0])/255, float64(c[1])/255, float64(c[2])/255
 	maxC := math.Max(r, math.Max(g, b))
@@ -305,10 +305,10 @@ func boostSaturation(c [3]byte) [3]byte {
 	l := (maxC + minC) / 2
 
 	if delta == 0 {
-		return c // gris puro, sin tono que saturar
+		return c // pure gray, no hue to saturate
 	}
 
-	// Calcular hue
+	// Calculate hue
 	var h float64
 	switch maxC {
 	case r:
@@ -323,10 +323,10 @@ func boostSaturation(c [3]byte) [3]byte {
 		h += 1
 	}
 
-	// Saturación máxima
+	// Maximum saturation
 	s := math.Min(delta/(1-math.Abs(2*l-1)), 1.0)
 
-	// HSL → RGB
+	// HSL to RGB
 	c2 := (1 - math.Abs(2*l-1)) * s
 	x := c2 * (1 - math.Abs(math.Mod(h*6, 2)-1))
 	m := l - c2/2

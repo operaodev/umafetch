@@ -14,7 +14,7 @@ const (
 	defaultProfile = "A horse girl who runs with all her heart. Born from the legend of the racetrack, she strives to become the ultimate champion."
 )
 
-// RenderUma renderiza una UMA usando el template y la configuración proporcionados
+// RenderUma renders a UMA using the provided template and configuration.
 func (uma Uma) RenderUma(template string, cfg Config) (string, error) {
 	slogan := uma.Slogan
 	if slogan == "" {
