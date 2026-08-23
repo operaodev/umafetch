@@ -7,7 +7,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:           "umafetch",
 	Short:         "Umamusume - Fastfetch theme",
-	Version:       "1.0.1",
+	Version:       "1.0.2",
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
