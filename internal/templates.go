@@ -19,17 +19,17 @@ var templateLarge string
 //go:embed templates/config_small.jsonc
 var templateSmall string
 
-// GenerateDefaultTemplateSmall genera el template small por defecto.
+// GenerateDefaultTemplateSmall generates the default small template.
 func GenerateDefaultTemplateSmall() error {
 	return writeDefaultTemplate("config_small.jsonc", templateSmall)
 }
 
-// GenerateDefaultTemplateLarge genera el template large por defecto.
+// GenerateDefaultTemplateLarge generates the default large template.
 func GenerateDefaultTemplateLarge() error {
 	return writeDefaultTemplate("config_large.jsonc", templateLarge)
 }
 
-// FindTemplate encuentra el template según la configuración.
+// FindTemplate finds the template based on the configuration.
 func FindTemplate(config Config) (string, error) {
 	var name string
 	if config.Template == TemplateLarge {
@@ -57,7 +57,7 @@ func templateDir() (string, error) {
 		return "", err
 	}
 
-	dir := filepath.Join(configDir, AppDir, "layouts")
+	dir := filepath.Join(configDir, AppDir, "templates")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err
 	}

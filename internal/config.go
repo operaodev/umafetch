@@ -35,7 +35,7 @@ func configPath() (string, error) {
 	return filepath.Join(configDir, AppDir, "config.json"), nil
 }
 
-// GenerateDefaultConfig genera una configuración predeterminada y la guarda en el archivo de configuración.
+// GenerateDefaultConfig generates a default configuration and saves it to the config file.
 func GenerateDefaultConfig() Config {
 	config := Config{
 		Separator: Separator{
@@ -48,7 +48,7 @@ func GenerateDefaultConfig() Config {
 	return config
 }
 
-// ConfigLoad carga la configuración desde el archivo de configuración.
+// ConfigLoad loads the configuration from the config file.
 func ConfigLoad() (Config, error) {
 	path, err := configPath()
 	if err != nil {
@@ -71,7 +71,7 @@ func ConfigLoad() (Config, error) {
 	return config, nil
 }
 
-// ConfigSave guarda la configuración en el archivo de configuración.
+// ConfigSave saves the configuration to the config file.
 func (c Config) ConfigSave() error {
 	path, err := configPath()
 	if err != nil {
