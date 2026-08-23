@@ -23,17 +23,21 @@ Umafetch is a terminal application written in Go that generates dynamic and cust
 
 You can install umafetch directly using Go's install command:
 
-```bash
-go install github.com/operaodev/umafetch@latest
-```
+    go install github.com/operaodev/umafetch@latest
 
 Make sure you have your Go binary directory in your `PATH` environment variable. This is usually located at `~/go/bin`.
 
-Once the binary is installed, you need to download the character assets (images and metadata) by running the following command:
+If `umafetch` is not recognized, you can run it directly using its full path:
 
-```bash
-umafetch install
-```
+    ~/go/bin/umafetch
+
+On Linux, you can also create a symbolic link to make `umafetch` available system-wide:
+
+    sudo ln -s /home/opera/go/bin/umafetch /usr/local/bin/umafetch
+
+Once the binary is installed, you need to download the character assets (images and metadata) by running:
+
+    umafetch install
 
 ## Usage
 
