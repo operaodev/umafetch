@@ -1,3 +1,5 @@
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/6458f5b3-835a-49e3-817e-bdab93b7141d" />
+
 # Umafetch
 
 > Uma Musume character outfits for [fastfetch](https://github.com/fastfetch-cli/fastfetch).
@@ -7,6 +9,9 @@
 ![license](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)
 
 Umafetch is a terminal application written in Go that generates dynamic and custom fastfetch configurations themed around the Uma Musume franchise, extracting representative color palettes from their outfits to match your terminal aesthetics.
+
+<img width="1099" alt="image" src="https://github.com/user-attachments/assets/c61cd40b-647e-422d-aec6-edb6fc5560c2" />
+
 
 ## Requirements
 
