@@ -57,7 +57,7 @@ func templateDir() (string, error) {
 		return "", err
 	}
 
-	dir := filepath.Join(configDir, AppDir, "layouts")
+	dir := filepath.Join(configDir, AppDir, "templates")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err
 	}
