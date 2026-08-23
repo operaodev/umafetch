@@ -64,12 +64,12 @@ func buildTextBlock(key, text, color string, firstLen, restLen int) string {
 	for i, line := range lines {
 		if i == 0 {
 			modules = append(modules, fmt.Sprintf(
-				`{"type":"custom","key":%s,"keyColor":%s,"format":"%s"}`,
-				escJSON(key), escJSON(color), line,
+				`{"type":"custom","key":%s,"keyColor":%s,"format":%s}`,
+				escJSON(key), escJSON(color), escJSON(line),
 			))
 		} else {
 			modules = append(modules, fmt.Sprintf(
-				`{"type":"custom","format":"%s"}`, line,
+				`{"type":"custom","format":%s}`, escJSON(line),
 			))
 		}
 	}
