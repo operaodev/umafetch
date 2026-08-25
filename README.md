@@ -33,7 +33,7 @@ If `umafetch` is not recognized, you can run it directly using its full path:
 
 On Linux, you can also create a symbolic link to make `umafetch` available system-wide:
 
-    sudo ln -s /home/opera/go/bin/umafetch /usr/local/bin/umafetch
+    sudo ln -s ~/go/bin/umafetch /usr/local/bin/umafetch
 
 Once the binary is installed, you need to download the character assets (images and metadata) by running:
 
